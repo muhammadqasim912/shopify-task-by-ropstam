@@ -1,0 +1,84 @@
+<script src="{{ 'assets/discounted-product.js' | asset_url }}"></script>
+{{ 'discounted-product.css' | asset_url | stylesheet_tag }}
+<div class="discounted-product">
+    <div class="banner">
+        <div class="column">
+            <h2>{{ section.settings.heading }}</h2>
+            <p class="section-setting">{{ section.settings.text }}</p>
+        </div>
+        <div class="column">
+            {% assign product = all_products[section.settings.selected_product] %}
+            {% if product %}
+                <img src="{{ product.featured_image | product_img_url: 'medium' }}" alt="{{ product.title }}">
+            {% endif %}
+        </div>
+        <div class="column">
+            {% if product %}
+                <h3>{{ product.title }}</h3>
+                <p class="category">Category: {{ product.product_type }}</p>
+                <p class="description">{{ product.description }}</p>
+                <form action="/cart/add" method="post" id="add-to-cart-form">
+                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    <button type="submit" class="add-to-cart" id="btn">Add to Cart</button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="column countdown">
+            <div id="countdown"></div>
+            <p class="timer-notation">{{ section.settings.timer_notation }}</p>
+            <p class="sale-text">Get <span id="discount">20%</span> OFF</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% schema %}
+{
+  "name": "Discounted Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "product",
+      "id": "selected_product",
+      "label": "Select Product"
+    },
+    {
+      "type": "text",
+      "id": "timer_duration",
+      "label": "Countdown Timer Duration (hours:minutes:seconds)",
+      "default": "24:00:00",
+      "info": "Enter the duration of the countdown timer in the format hours:minutes:seconds"
+    },
+    {
+      "type": "text",
+      "id": "timer_notation",
+      "label": "Timer Notation"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Products",
+      "name": "Discounted Product",
+      "settings": {
+        "heading": "50% Off Today Only",
+        "text": "Limited Time Offer",
+        "timer_notation": "Hurry! Sale Ends Soon"
+      }
+    }
+  ]
+}
+
+
+
+{% endschema %}
